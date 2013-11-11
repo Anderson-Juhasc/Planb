@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+	 
+	<head>
+		<title>BitcoinATM</title>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>  
+		<script src=http://cdn.pubnub.com/pubnub-3.5.47.min.js ></script>
+		<link href="bootstrap/dist/css/bootstrap.css" rel="stylesheet">	
+		<link href="bootstrap/examples/starter-template/starter-template.css" rel="stylesheet">		
+		<script language="JavaScript">
+
+			var timerNum;
+			function changeImage(path, id)
+			{
+				document.getElementById(id).src = path;
+			}
+			function startTimer()
+			{
+				var doc = document.getElementById("timer");
+				if(timerNum == undefined || timerNum == -1)
+				{
+					timerNum = 6;
+				}
+				timerNum -= 1;
+				if(timerNum >= 0)
+				{
+					if(timerNum == 0)
+					{
+						timerDone();					   
+						doc.innerHTML = timerNum.toString();
+					}
+					else
+					{
+						window.setTimeout(startTimer,10000);
+						doc.innerHTML = timerNum.toString();
+					}
+				}
+			}
+			function timerDone()
+			{
+			}
+			function imbalance()
+			{
+				timerShow();
+				startTimer();
+				changeImage("sending.gif","statusIcon");
+
+			}
+			function timerHide(){
+				document.getElementById("timer").innerHTML = "";
+			}
+			function timerShow()
+			{
+				document.getElementById("timer").innerHTML = "<P id=\"timerContainer\">Timer <div id=\"timer\">0</div><P>";
+			}
+			function inputMessage(msg)
+			{
+				msg = JSON.parse(msg);
+				if(msg["tendered"] != undefined)
+					usdInMachine += parseInt(msg["tendered"]);
+				if(msg["address"] != undefined)
+					recvAddress = msg["address"];
+				if(msg["paid"] != undefined)
+				{
+					paidOut += parseInt(msg["paid"]);
+					sessionTotal = usdInMachine - paidOut;
+					timerHide();
+					changeImage("waiting.gif","statusIcon");
+					inSession = false;
+				}
+				if(msg["recipt"] != undefined)
+				{
+					txout = msg["txout"];
+					window.setTimeout(function() { txout=""; jsToHTML(); }, 5000);
+				}
+				if(msg["btcPrice"] != undefined)
+					btcPrice = parseInt(msg["btcPrice"]);
+
+				sessionTotal = usdInMachine - paidOut;
+
+				if(usdInMachine > paidOut)
+				{
+					inSession = true;
+					imbalance();
+				}
+				jsToHTML();
+			}
+			function jsToHTML()
+			{
+				var div_indev = document.getElementById("indevice");
+				var div_paidout = document.getElementById("paidout");
+				var div_satoshi = document.getElementById("satoshi");
+				var div_txout = document.getElementById("txout");
+				var div_bitcoinprice = document.getElementById("bitcoinprice");
+				var div_sessiontotal = document.getElementById("sessiontotal");
+				var div_recvAddress = document.getElementById("recvaddress");
+
+				div_indev.innerHTML = usdInMachine.toString();
+				div_paidout.innerHTML = paidOut.toString();
+				div_satoshi.innerHTML = satoshi.toString();
+				div_txout.innerHTML = txout;
+				div_bitcoinprice.innerHTML = btcPrice.toString();
+				div_sessiontotal.innerHTML = sessionTotal.toString();
+				div_recvAddress.innerHTML = recvAddress;
+			}
+			var pubnub = PUBNUB.init({
+				subscribe_key : 'sub-c-ecc13c7c-48d9-11e3-b088-02ee2ddab7fe'
+			});
+			pubnub.subscribe({
+				channel : "atm",
+				message : function(m) { inputMessage(JSON.stringify(m)); },
+			});
+			var inSession = false;
+			var usdInMachine = 0;
+			var btcPrice = 0;
+			var recvAddress = "NA";
+			var satoshi = 0;
+			var paidOut = 0;
+			var sessionTotal = 0;
+			var txout = "";
+		</script>
+ 
+	</head>
+	 
+	<body>
+<device type="media" onchange="update(this.data)"></device>
+<video autoplay></video>
+<script>
+navigator.getUserMedia  = navigator.getUserMedia ||
+                          navigator.webkitGetUserMedia ||
+                          navigator.mozGetUserMedia ||
+                          navigator.msGetUserMedia;
+
+var video = document.querySelector('video');
+
+if (navigator.getUserMedia) {
+  navigator.getUserMedia({audio: true, video: true}, function(stream) {
+    video.src = window.URL.createObjectURL(stream);
+  }, errorCallback);
+} else {
+  video.src = 'somevideo.webm'; // fallback.
+}
+</script>
+</script>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Cash2BTC</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="live.html">Live charts</a></li>
+            <li><a href="login.html">Login</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="starter-template">
+        <h1>The Bitcoin ATM</h1>
+		<center> <img id="statusIcon"></center>
+		<P id="timerContainer">
+		Timer <div id="timer">0</div>
+		<P>
+		Total USD in device <div id="indevice">0.00$</div>
+		<P>
+		Total paid out by device (in USD) <div id="paidout">0</div> 
+		<P>
+		Total satoshi about to be paid out by device <div id="satoshi">0</div> 
+		<P>
+		<p>
+		txout: <div id="txout">Hash</div>
+		<P>
+		Last price <div id="bitcoinprice">updating..</div>
+		<P>
+		sesion total $<div id="sessiontotal">0.00</div>
+		<P>
+		Recieving address <div id="recvaddress">empty</div>
+		<P>
+
+        <p class="lead"></p>
+      </div>
+
+    </div> 
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script> 
+	</body>
+</html>
