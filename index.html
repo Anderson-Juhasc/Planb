@@ -9,7 +9,10 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
+
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link href='http://fonts.googleapis.com/css?family=Sintony:400,700' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="styles/css/main.css">
 
         <script src="bower_components/modernizr/modernizr.js"></script>
@@ -24,7 +27,7 @@
                 <div class="grid">
                     <div class="grid__item two-tenths portable-one-whole">
                         <!-- .logo -->
-                        <a class="logo" href="">
+                        <a class="logo brand-face" href="">
                             <img src="images/btc-logo-mini.png" alt="" class="logo__img" />
                             <span class="logo__text">Cash2BTC</span>
                         </a>
@@ -40,10 +43,16 @@
                                     <!-- .head__nav-left -->
                                     <ul class="head__nav-left nav">
                                         <li>
-                                            <a href="">Home</a>
+                                            <a href="">
+                                                <i class="icon-home"></i>
+                                                Home
+                                            </a>
                                         </li>
                                         <li>
-                                            <a href="">Live charts</a>
+                                            <a href="">
+                                                <i class="icon-bar-chart"></i>
+                                                Live charts
+                                            </a>
                                         </li>
                                     </ul>
                                     <!-- /.head__nav-left -->
@@ -53,7 +62,10 @@
                                     <!-- .head__nav-right -->
                                     <ul class="head__nav-right nav">
                                         <li>
-                                            <a href="">Login</a>
+                                            <a href="">
+                                                <i class="icon-signin"></i>
+                                                Login
+                                            </a>
                                         </li>
                                     </ul>
                                     <!-- /.head__nav-right -->
@@ -77,10 +89,10 @@
                 <!-- .wrapper -->
                 <div class="wrapper">
                     <!-- .values -->
-                    <div class="values">
+                    <div id="values" class="values brand-face">
                         <!-- .values__price -->
                         <h1 class="values__price">
-                            $ 422.24
+                            $000.00
                         </h1>
                         <!-- /.values__price -->
 
@@ -89,7 +101,7 @@
                             <li>
                                 <!-- .values__bid -->
                                 <h2 class="values__bid">
-                                    Bid: $ 422.3
+                                    $000.00
                                 </h2>
                                 <!-- /.values__bid -->
                             </li>
@@ -97,7 +109,7 @@
                             <li>
                                 <!-- .values__ask -->
                                 <h2 class="values__ask">
-                                    Ask: $ 424.06
+                                    $000.00
                                 </h2>
                                 <!-- /.values__ask -->
                             </li>
@@ -131,6 +143,13 @@
             <!-- /.wrapper -->
         </div>
         <!-- /.main -->
+
+        <div id="indevice"></div>
+        <div id="paidout"></div>
+        <div id="satoshi"></div>
+        <div id="txout"></div>
+        <div id="sessiontotal"></div>
+        <div id="recvaddress"></div>
 
     <!-- build:js scripts/main.js -->
     <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
